@@ -1,6 +1,6 @@
 package com.dareTo.services.impl;
 
-import com.dareTo.config.JwtUManager;
+import com.dareTo.config.JwtManager;
 import com.dareTo.data.models.User;
 import com.dareTo.data.repositories.UserRepo;
 import com.dareTo.dto.requests.LoginRequest;
@@ -23,7 +23,7 @@ public class AuthServicesImpl implements AuthServices {
     private UserRepo userRepo;
 
     @Autowired
-    private JwtUManager jwtUManager;
+    private JwtManager jwtManager;
 
 //    @Autowired
 //    private SessionManager sessionManager;
@@ -51,7 +51,7 @@ public class AuthServicesImpl implements AuthServices {
             throw new IncorrectUsernameOrPasswordException("Username or password is incorrect");
         }
 
-        String token = jwtUManager.generateToken(user.getId(), user.getUsername());
+        String token = jwtManager.generateToken(user.getId(), user.getUsername());
 
         LoginDto response = mapToLoginDto(user);
         response.setToken(token);
