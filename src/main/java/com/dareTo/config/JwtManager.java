@@ -9,11 +9,11 @@ import java.security.Key;
 import java.util.Date;
 
 @Component
-public class JwtUtil {
+public class JwtManager {
     private final Key SECRET_KEY;
     private final long EXPIRATION_TIME;
 
-    public JwtUtil(@Value("${JWT_SECRET}")String secret, @Value("${JWT_EXPIRATION}")long expiration) {
+    public JwtManager(@Value("${JWT_SECRET}")String secret, @Value("${JWT_EXPIRATION}")long expiration) {
         this.SECRET_KEY = Keys.hmacShaKeyFor(secret.getBytes());
         this.EXPIRATION_TIME = expiration;
     }
@@ -56,7 +56,7 @@ public class JwtUtil {
        return expiration.before(new Date());
     }
 
-    public boolean validateToken(String token, String username) {
-        return extractUsername(token).equals(username) && !isTokenExpired(token);
-    }
+//    public boolean validateToken(String token, String username) {
+//        return extractUsername(token).equals(username) && !isTokenExpired(token);
+//    }
 }
