@@ -1,14 +1,14 @@
 package com.dareTo.services.impl;
 
-import com.dareTo.config.JwtUtil;
+import com.dareTo.config.JwtUManager;
 import com.dareTo.data.models.User;
 import com.dareTo.data.repositories.UserRepo;
 import com.dareTo.dto.requests.LoginRequest;
 import com.dareTo.dto.requests.UserRequest;
 import com.dareTo.dto.responses.LoginDto;
 import com.dareTo.dto.responses.UserResponse;
+import com.dareTo.exceptions.EmailTakenException;
 import com.dareTo.exceptions.IncorrectUsernameOrPasswordException;
-import com.dareTo.exceptions.UserNotFoundException;
 import com.dareTo.exceptions.UsernameTakenException;
 import com.dareTo.services.AuthServices;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,7 +23,7 @@ public class AuthServicesImpl implements AuthServices {
     private UserRepo userRepo;
 
     @Autowired
-    private JwtUtil jwtUtil;
+    private JwtUManager jwtUManager;
 
 //    @Autowired
 //    private SessionManager sessionManager;
@@ -32,6 +32,9 @@ public class AuthServicesImpl implements AuthServices {
     public UserResponse registerUser(UserRequest request) {
         if(userRepo.findByUsername(request.getUsername()).isPresent()) {
             throw new UsernameTakenException("The username " + request.getUsername() + " already exists");
+        }
+        if(userRepo.findByEmail(request.getEmail()).isPresent()) {
+            throw new EmailTakenException("Email already in use");
         }
         User user = mapToUser(request);
         User savedUser = userRepo.save(user);
@@ -48,7 +51,7 @@ public class AuthServicesImpl implements AuthServices {
             throw new IncorrectUsernameOrPasswordException("Username or password is incorrect");
         }
 
-        String token = jwtUtil.generateToken(user.getId(), user.getUsername());
+        String token = jwtUManager.generateToken(user.getId(), user.getUsername());
 
         LoginDto response = mapToLoginDto(user);
         response.setToken(token);
