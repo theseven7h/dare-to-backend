@@ -1,6 +1,5 @@
 package com.dareTo.controllers;
 
-import com.dareTo.config.JwtUtil;
 import com.dareTo.dto.requests.LoginRequest;
 import com.dareTo.dto.requests.UserRequest;
 import com.dareTo.dto.responses.LoginDto;
