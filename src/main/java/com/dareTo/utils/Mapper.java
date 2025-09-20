@@ -19,6 +19,8 @@ public class Mapper {
         plan.setTitle(requestDto.getTitle());
         plan.setDescription(requestDto.getDescription());
         plan.setCompleted(false);
+        plan.setStartDate(requestDto.getStartDate());
+        plan.setEndDate(requestDto.getEndDate());
         plan.setLastModified(LocalDateTime.now());
         return plan;
     }
@@ -29,6 +31,8 @@ public class Mapper {
         planResponse.setTitle(plan.getTitle());
         planResponse.setDescription(plan.getDescription());
         planResponse.setCompleted(plan.isCompleted());
+        planResponse.setStartDate(plan.getStartDate());
+        planResponse.setEndDate(plan.getEndDate());
         planResponse.setLastModified(plan.getLastModified());
         return planResponse;
     }
