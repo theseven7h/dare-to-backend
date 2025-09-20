@@ -5,6 +5,7 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Document
@@ -15,6 +16,8 @@ public class Plan {
     private String title;
     private String description;
     private boolean isCompleted;
+    private LocalDate startDate;
+    private LocalDate endDate;
     private LocalDateTime lastModified;
 
     @DBRef
