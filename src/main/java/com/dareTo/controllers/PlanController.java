@@ -1,6 +1,7 @@
 package com.dareTo.controllers;
 
 import com.dareTo.dto.requests.PlanRequest;
+import com.dareTo.dto.requests.UpdatePlanRequest;
 import com.dareTo.dto.responses.ListPlanResponseDto;
 import com.dareTo.dto.responses.PlanResponseDto;
 import com.dareTo.dto.responses.PlanResponse;
@@ -100,12 +101,25 @@ public class PlanController {
     @DeleteMapping("/delete/{id}")
     public ResponseEntity<Boolean> deletePlan(@PathVariable String id, HttpServletRequest request) {
         String userId = request.getAttribute("userId").toString();
-        log.info("User: {}", userId);
-        System.out.println(userId);
         boolean isDeleted = planServices.deletePlanById(userId, id);
         return ResponseEntity
                 .status(HttpStatus.OK)
                 .body(isDeleted);
+    }
+
+    @PutMapping("/update/{id}")
+    public ResponseEntity<PlanResponseDto> updatePlan(@PathVariable String id, @Valid @RequestBody UpdatePlanRequest updateRequest, HttpServletRequest request) {
+        String userId = request.getAttribute("userId").toString();
+        PlanResponse planResponse = planServices.updatePlan(userId, id, updateRequest);
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(
+                        new PlanResponseDto(
+                                HttpStatus.OK,
+                                "Plan updated successfully",
+                                planResponse
+                        )
+                );
     }
 
 //    @PatchMapping("/{id}/incomplete")
