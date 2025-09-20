@@ -17,7 +17,6 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Optional;
 
 import static com.dareTo.utils.Mapper.mapToPlan;
 import static com.dareTo.utils.Mapper.mapToPlanResponse;
@@ -75,17 +74,6 @@ public class PlanServicesImpl implements PlanServices {
         return mapToPlanResponse(savedPlan);
     }
 
-//    @Override
-//    public PlanResponse markPlanAsIncomplete(String userId, String id) {
-//        Plan plan = planRepo.findById(id).orElseThrow(
-//                () -> new PlanNotFoundException("Plan with this ID not found")
-//        );
-//        plan.setCompleted(false);
-//        plan.setLastModified(LocalDateTime.now());
-//        Plan savedPlan = planRepo.save(plan);
-//        return mapToPlanResponse(savedPlan);
-//    }
-
     @Override
     public boolean deletePlanById(String userId, String id) {
         User user =  userRepo.findById(userId).orElseThrow(
@@ -109,16 +97,16 @@ public class PlanServicesImpl implements PlanServices {
 
         boolean titleIsPresent = requestDto.getTitle() != null && !requestDto.getTitle().isEmpty();
         boolean descriptionIsPresent = requestDto.getDescription() != null && !requestDto.getDescription().isEmpty();
+        boolean startDateIsPresent = requestDto.getStartDate() != null;
+        boolean endDateIsPresent = requestDto.getEndDate() != null;
 
-        if(!titleIsPresent && !descriptionIsPresent) {
-            throw new EmptyUpdateDetailsException("At least title or description is required");
+        if(!titleIsPresent && !descriptionIsPresent  && !startDateIsPresent && !endDateIsPresent) {
+            throw new EmptyUpdateDetailsException("At least title, description, or dates are required");
         }
-        if(titleIsPresent) {
-            plan.setTitle(requestDto.getTitle());
-        }
-        if(descriptionIsPresent) {
-            plan.setDescription(requestDto.getDescription());
-        }
+        if(titleIsPresent) plan.setTitle(requestDto.getTitle());
+        if(descriptionIsPresent) plan.setDescription(requestDto.getDescription());
+        if(startDateIsPresent) plan.setStartDate(requestDto.getStartDate());
+        if(endDateIsPresent) plan.setEndDate(requestDto.getEndDate());
         Plan UpdatedPlan = planRepo.save(plan);
         return mapToPlanResponse(UpdatedPlan);
     }
