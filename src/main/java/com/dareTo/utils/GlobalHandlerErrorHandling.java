@@ -1,6 +1,7 @@
 package com.dareTo.utils;
 
 import com.dareTo.exceptions.*;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.FieldError;
@@ -84,5 +85,13 @@ public class GlobalHandlerErrorHandling {
     public ResponseEntity<Map<String, String>> handleEmailTakenException(EmailTakenException ex) {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                 .body(new HashMap<>(Map.of("field", "email taken", "message", ex.getMessage())));
+    }
+
+    @ExceptionHandler(JsonProcessingException.class)
+    public ResponseEntity<Map<String, String>> handleJsonProcessingException(JsonProcessingException ex) {
+        Map<String, String> errors = new HashMap<>();
+        errors.put("field", "json processing error");
+        errors.put("message", ex.getMessage());
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errors);
     }
 }
