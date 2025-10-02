@@ -1,11 +1,13 @@
-package com.dareTo.services;
+package com.dareTo.services.impl;
 
 import com.dareTo.config.RabbitConfig;
 import com.dareTo.data.models.EmailMessage;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.stereotype.Service;
 
+@Slf4j
 @Service
 public class EmailPublisher {
     private final RabbitTemplate rabbitTemplate;
@@ -24,9 +26,9 @@ public class EmailPublisher {
                     RabbitConfig.ROUTING_KEY,
                     jsonMessage
             );
-            System.out.println("Email message published: " + jsonMessage);
+            log.info("Email message published: {}", jsonMessage);
         } catch (Exception e) {
-            System.err.println("Failed to send email message: " + e.getMessage());
+            log.error("Failed to send email message: {}", e.getMessage());
             throw new RuntimeException("Failed to send email message", e);
         }
     }
