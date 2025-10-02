@@ -94,4 +94,20 @@ public class GlobalHandlerErrorHandling {
         errors.put("message", ex.getMessage());
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errors);
     }
+
+    @ExceptionHandler(EmailNotFoundException.class)
+    public ResponseEntity<Map<String, String>> handleEmailNotFoundException(EmailNotFoundException ex) {
+        Map<String, String> errors = new HashMap<>();
+        errors.put("field", "email not found");
+        errors.put("message", ex.getMessage());
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(errors);
+    }
+
+    @ExceptionHandler(InvalidTokenException.class)
+    public ResponseEntity<Map<String, String>> handleInvalidTokenException(InvalidTokenException ex) {
+        Map<String, String> errors = new HashMap<>();
+        errors.put("field", "invalid token");
+        errors.put("message", ex.getMessage());
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(errors);
+    }
 }
