@@ -1,22 +1,18 @@
 package com.dareTo.controllers;
 
+import com.dareTo.dto.requests.ForgotPasswordRequest;
 import com.dareTo.dto.requests.LoginRequest;
+import com.dareTo.dto.requests.ResetRequest;
 import com.dareTo.dto.requests.UserRequest;
-import com.dareTo.dto.responses.LoginDto;
-import com.dareTo.dto.responses.LoginUserResponse;
-import com.dareTo.dto.responses.RegisterUserResponse;
-import com.dareTo.dto.responses.UserResponse;
+import com.dareTo.dto.responses.*;
 import com.dareTo.services.impl.AuthServicesImpl;
-import com.dareTo.utils.SessionManager;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/v1/auth")
@@ -24,14 +20,12 @@ public class AuthController {
     @Autowired
     private AuthServicesImpl authServices;
 
-    @Autowired
-    private SessionManager sessionManager;
-
     @PostMapping("/register")
-    public ResponseEntity<RegisterUserResponse> registerUser(@Valid @RequestBody UserRequest userRequest) {
+    public ResponseEntity<RegisterUserResponse> registerUser(@Valid @RequestBody UserRequest userRequest) throws JsonProcessingException {
         UserResponse userResponse = authServices.registerUser(userRequest);
+
         return ResponseEntity
-                .status(HttpStatus.OK)
+                .status(HttpStatus.CREATED)
                 .body(
                         new RegisterUserResponse(
                                 HttpStatus.CREATED,
@@ -59,5 +53,21 @@ public class AuthController {
                             )
                     )
                 );
+    }
+
+    @PostMapping("/forgotPassword")
+    public ResponseEntity<ResetPasswordResponse> forgotPassword(@Valid @RequestBody ForgotPasswordRequest request) {
+        ResetPasswordResponse response = authServices.forgotPassword(request.getEmail());
+
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(response);
+    }
+
+    @PostMapping("/resetPassword")
+    public ResponseEntity<Boolean> resetPassword(@Valid @RequestBody ResetRequest resetRequest) {
+        Boolean response = authServices.resetPassword(resetRequest);
+
+        return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 }
