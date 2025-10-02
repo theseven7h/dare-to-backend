@@ -1,11 +1,13 @@
 package com.dareTo.utils;
 
 import com.dareTo.data.models.Plan;
+import com.dareTo.data.models.ResetToken;
 import com.dareTo.data.models.User;
 import com.dareTo.dto.requests.PlanRequest;
 import com.dareTo.dto.requests.UserRequest;
 import com.dareTo.dto.responses.LoginDto;
 import com.dareTo.dto.responses.PlanResponse;
+import com.dareTo.dto.responses.ResetPasswordResponse;
 import com.dareTo.dto.responses.UserResponse;
 
 import java.time.LocalDateTime;
@@ -57,5 +59,13 @@ public class Mapper {
         loginDto.setUsername(user.getUsername());
         loginDto.setEmail(user.getEmail());
         return loginDto;
+    }
+
+    public static ResetPasswordResponse mapToResetPasswordResponse(ResetToken resetToken) {
+        ResetPasswordResponse response = new ResetPasswordResponse();
+        response.setUserId(resetToken.getUserId());
+        response.setToken(resetToken.getToken());
+        response.setExpiryTime(resetToken.getExpiryTime());
+        return response;
     }
 }
